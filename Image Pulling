@@ -1,0 +1,86 @@
+Pulling data from an fingerprint reader and conerting to an image...
+
+import com.digitalpersona.onetouch.DPFPGlobal;
+import com.digitalpersona.onetouch.DPFPSample;
+import com.digitalpersona.onetouch.capture.DPFPCapture; 
+import com.digitalpersona.onetouch.capture.event.DPFPDataEvent;
+import com.digitalpersona.onetouch.capture.event.DPFPDataListener;
+import com.digitalpersona.onetouch.capture.event.DPFPErrorEvent;
+import com.digitalpersona.onetouch.capture.event.DPFPErrorListener;
+import com.digitalpersona.onetouch.capture.event.DPFPReaderStatusAdapter; 
+import com.digitalpersona.onetouch.capture.event.DPFPReaderStatusEvent;
+import com.digitalpersona.onetouch.capture.event.DPFPReaderStatusListener;
+import com.digitalpersona.onetouch.capture.event.DPFPSensorEvent;
+import com.digitalpersona.onetouch.capture.event.DPFPSensorListener;
+ 
+
+public class Demo {
+public static void main(String args[]){
+//byte[] a=null;
+DPFPCapture capture=DPFPGlobal.getCaptureFactory().createCapture();
+capture.addReaderStatusListener(new DPFPReaderStatusListener() {
+ 
+    @Override
+    public void readerDisconnected(DPFPReaderStatusEvent arg0) {
+         //TODO Auto-generated method stub
+        System.out.println("I m Dis-connected");
+ 
+    }
+ 
+    @Override
+    public void readerConnected(DPFPReaderStatusEvent arg0) {
+        // TODO Auto-generated method stub
+        System.out.println("I m connected");
+    }
+});
+capture.addSensorListener(new DPFPSensorListener() {
+ 
+    @Override
+    public void imageAcquired(DPFPSensorEvent arg0) {
+        // TODO Auto-generated method stub
+        System.out.print("acquired");
+    }
+ 
+    @Override
+    public void fingerTouched(DPFPSensorEvent arg0) {
+        // TODO Auto-generated method stub
+        System.out.print("s");
+    }
+ 
+    @Override
+    public void fingerGone(DPFPSensorEvent arg0) {
+        // TODO Auto-generated method stub
+        System.out.print("gone");
+    }
+});
+capture.startCapture();
+capture.addDataListener(new DPFPDataListener() {
+ 
+    @Override
+    public void dataAcquired(DPFPDataEvent arg0) {
+        // TODO Auto-generated method stub
+        DPFPSample sample=DPFPGlobal.getSampleFactory().createSample();
+        sample=arg0.getSample();    
+        byte a[]=sample.serialize();
+        for(byte i:a){
+            System.out.print(i);
+        }
+    }
+});
+capture.addErrorListener(new DPFPErrorListener() {
+ 
+    @Override
+    public void exceptionCaught(DPFPErrorEvent arg0) {
+        // TODO Auto-generated method stub
+        System.out.println("error");
+    }
+ 
+    @Override
+    public void errorOccured(DPFPErrorEvent arg0) {
+        // TODO Auto-generated method stub
+        System.out.println("error");
+ 
+    }
+});
+ 
+}
